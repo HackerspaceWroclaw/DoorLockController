@@ -36,7 +36,6 @@ void DoorLockController::checkForKeys()
            logger.info("Access granted.");
            unauthorizedAccess = false;
            doorLock.open();
-           continue;
        }
        else
        {
@@ -44,8 +43,9 @@ void DoorLockController::checkForKeys()
            logger.error("ACCESS DENIED!");
            unauthorizedAccess = true;
            delay(DOOR_OPEN_TIME_MS);
-           continue;
        }
+
+       return;
     }
 }
 
