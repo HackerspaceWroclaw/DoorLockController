@@ -20,7 +20,7 @@ Key NfcAuthenticator::getKey()
         return Key();
 
     uint8_t *nuid =  rfid.uid.uidByte;
-    logger.debug("Mifare Classic tag detected, NUID: %02hhX %02hhX %02hhX %02hhX", nuid[0], nuid[1], nuid[2], nuid[3]);
+    logger.debug("NFC tag detected, NUID: %02hhX %02hhX %02hhX %02hhX", nuid[0], nuid[1], nuid[2], nuid[3]);
 
     releaseCard();
 
@@ -36,14 +36,13 @@ bool NfcAuthenticator::initializeCard()
         return false;
 
     auto piccType = rfid.PICC_GetType(rfid.uid.sak);
-    if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI &&
-        piccType != MFRC522::PICC_TYPE_MIFARE_1K &&
-        piccType != MFRC522::PICC_TYPE_MIFARE_4K)
+    if (piccType == MFRC522::PICC_TYPE_NOT_COMPLETE)
     {
-        logger.warning("Invalid Mifare tag type: %s", rfid.PICC_GetTypeName(piccType));
+        logger.warning("Incomplete UID detected in SAK procedure");
         return false;
     }
 
+    logger.debug("Tag type: %d", static_cast<int>(piccType));
     return true;
 }
 
