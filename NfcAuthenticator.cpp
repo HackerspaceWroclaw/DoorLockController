@@ -8,7 +8,6 @@ NfcAuthenticator::NfcAuthenticator(int nfcSlaveSelectPin, int nfcResetPin, const
     logger(logger)
 {
     SPI.begin();
-    rfid.PCD_Init();
 }
 
 NfcAuthenticator::~NfcAuthenticator()
@@ -29,6 +28,8 @@ Key NfcAuthenticator::getKey()
 
 bool NfcAuthenticator::initializeCard()
 {
+    rfid.PCD_Init();
+
     if (!rfid.PICC_IsNewCardPresent())
         return false;
 
